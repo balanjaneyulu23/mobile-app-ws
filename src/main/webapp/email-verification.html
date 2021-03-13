@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Email Verification Service</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				var urlParams = new URLSearchParams(location.search);
+				if (urlParams.has('token')) {
+					verifyToken(urlParams.get('token'));
+				}
+
+				function verifyToken(tokenValue) {
+					$.get('http://ec2-15-207-109-21.ap-south-1.compute.amazonaws.com:8080/mobile-app-ws/users/email-verification', {token : tokenValue})
+					.done(
+							function(response) {
+								console.log(response)
+								if (response["operationResult"] === "SUCCESS") {
+									$("#not-successfull-result").attr("Style","display:none !important;");
+									$("#successfull-result").attr("Style", "display:block !important;");
+								} else {
+									$("#successfull-result").attr("Style", "display:none !important;");
+									$("#not-successfull-result").attr("Style", "display:block !important;");
+								}
+
+							});
+
+				}
+			});
+</script>
+
+</head>
+<body>
+	<div id="successfull-result" style="display: none">Successfull
+		Verification</div>
+	<div id="not-successfull-result" style="display: none">Verification
+		Link has expired</div>
+</body>
+</html>
